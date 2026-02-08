@@ -11,17 +11,33 @@
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
         
     <script type="text/babel">
-       function ChatInput () {
+       function ChatInput ({chatMessages, setChatMessages}) {
+        const [inputText, setInputText] = React.useState ('')
+
+        function saveInputText (event) {
+            setInputText(event.target.value) // get the in value of placeholder
+        }
+        function sendmessage () {
+            setChatMessages ([  // set new value
+             ...chatMessages, // spreader creating duplicate and the updating
+             {
+                message:inputText, // show value that we written in extbox
+                sender:'user',
+                id: crypto.randomUUID()
+             }
+           ]) 
+        }
         return(
             <>
              <input 
                  placeholder = "send a message to chat bot" 
-                 size = "30"/>
-             <button>send</button>
+                 size = "30"
+                 onChange = {saveInputText}/>
+             <button onClick = {sendmessage}>send</button>
             </>
         )
        }
-       function ChatMessage ({message , sender}) {
+       function ChatMessage ({message , sender,id}) {
     //    const sender = props.sender
     //     const message = props.msg;
         // const { message , sender}= props;
@@ -45,22 +61,53 @@
         )
        }
 
+       
+
+       function ChatMessages ({chatMessages}) { // so passing the array
+         return(
+            <>
+                {chatMessages.map((chatMessage) => { // here chatMessages array acess is needed
+                    return(
+                        <ChatMessage
+                        message = {chatMessage.message}
+                        sender ={chatMessage.sender}
+                        key ={chatMessage.id} />
+                    );
+                })
+            
+        }  </>
+    ) }
+
        function App () {
+        const [chatMessages, setChatMessages] = React.useState(
+            [{
+            message:'hello chatbot',
+            sender:'user',
+            id:'id1'
+         },{
+            message:'Hello! How can I help you?',
+            sender:'robot',
+            id:'id2'
+         },{
+            message:'date today',
+            sender:'user',
+            id:'id3'
+         },{
+            message:'today is february four',
+            sender:'robot',
+            id:'id4'
+         },]
+        )
+        // const [chatMessages, setChatMessages] = array; // even more shorcut in upper is writeen
+        // const chatMessages = array[0]; // current value
+        // const setChatMessages = array[1]; // updater value
             return(
             <>
-            <ChatInput/>
-            <ChatMessage 
-                message ="hello ChatBot" 
-                sender = "user"/>
-            <ChatMessage
-                message ="Hello! How can I help you?"
-                sender = "robot"/>
-            <ChatMessage 
-                message ="date today"
-                sender = "user"/>
-            <ChatMessage 
-                message ="today is february four"
-                sender = "robot"/>
+            <ChatInput
+            chatMessages ={chatMessages}
+            setChatMessages = {setChatMessages}/> 
+            <ChatMessages
+            chatMessages ={chatMessages}/>
             </>)
        }
 
