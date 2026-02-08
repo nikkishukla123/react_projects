@@ -7,6 +7,7 @@
     <div class="js-container"></div>
     <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
         
@@ -18,21 +19,35 @@
             setInputText(event.target.value) // get the in value of placeholder
         }
         function sendmessage () {
-            setChatMessages ([  // set new value
+          const  newChatMessages = ([  // set new value
              ...chatMessages, // spreader creating duplicate and the updating
              {
-                message:inputText, // show value that we written in extbox
+                message:inputText, // show value that we written in textbox
                 sender:'user',
                 id: crypto.randomUUID()
              }
-           ]) 
+           ])
+           setChatMessages(newChatMessages);   // yha par pass kardena hai
+
+           const response = Chatbot.getResponse(inputText);
+           setChatMessages ([  // set new value
+             ...newChatMessages, // spreader creating duplicate copies of now new chatmessages so user and robot both msg show on website without overwrite
+             {
+                message:response, // show value that we written in textbox
+                sender:'robot',
+                id: crypto.randomUUID()
+             }
+           ])
+           
+           setInputText('') ; // to set the placeholder empty
         }
         return(
             <>
              <input 
                  placeholder = "send a message to chat bot" 
                  size = "30"
-                 onChange = {saveInputText}/>
+                 onChange = {saveInputText}
+                 value = {inputText}/>  
              <button onClick = {sendmessage}>send</button>
             </>
         )
