@@ -12,8 +12,10 @@
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
         
     <script type="text/babel">
-       function ChatInput ({chatMessages, setChatMessages}) {
+       function ChatInput ({chatMessages, setChatMessages,isLoading, setIsLoading}) {
         const [inputText, setInputText] = React.useState ('')
+        
+        
 
         function saveInputText (event) {
             setInputText(event.target.value) // get the in value of placeholder
@@ -26,6 +28,8 @@
              }
         }
        async function sendmessage () {
+        if (isLoading || inputText.trim() === "") return;
+        setIsLoading(true);
           const  newChatMessages = ([  // set new value
              ...chatMessages, // spreader creating duplicate and the updating
              {
@@ -41,7 +45,7 @@
            ])
            setChatMessages(newChatMessages);   // yha par pass kardena hai
            setInputText('') ; // to set the placeholder empty
-          
+           
            
            const response = await Chatbot.getResponseAsync(inputText);
            setChatMessages ([  // set new value
@@ -51,17 +55,18 @@
                 id: crypto.randomUUID()
              }
            ])
-           
+           setIsLoading(false);
         }
         return(
             <>
              <input 
+                disabled={isLoading}
                  placeholder = "send a message to chat bot" 
                  size = "30"
                  onChange = {saveInputText}
                  value = {inputText}
                  onKeyDown = {handlekeyDown}/>  
-             <button onClick = {sendmessage}>send</button>
+             <button disabled={isLoading} onClick = {sendmessage}>send</button>
             </>
         )
        }
@@ -126,6 +131,7 @@
             id:'id4'
          },]
         )
+        const [isLoading, setIsLoading] = React.useState(false);
         // const [chatMessages, setChatMessages] = array; // even more shorcut in upper is writeen
         // const chatMessages = array[0]; // current value
         // const setChatMessages = array[1]; // updater value
@@ -133,7 +139,9 @@
             <>
             <ChatInput
             chatMessages ={chatMessages}
-            setChatMessages = {setChatMessages}/> 
+            setChatMessages = {setChatMessages}
+            isLoading = {isLoading}
+            setIsLoading = {setIsLoading}/> 
             <ChatMessages
             chatMessages ={chatMessages}/>
             </>)
