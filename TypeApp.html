@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+        <!-- React code MUST be in a separate script -->
+    <script type="text/babel">
+     
+
+      function App () {
+         const [InputText,SetInputText] = React.useState('')
+         function SaveText (event) { //keeped wwhatever value in holder must in p tag
+            SetInputText(event.target.value)
+         }
+         function Reset () { //emptied the value
+            SetInputText("")
+         }
+         function Example () { // put a name with button
+            SetInputText("Alice")
+         }
+        return(
+            <>
+            <input 
+                 placeholder = "Type here please!" 
+                 size = "20"
+                 onChange = {SaveText}
+                 value = {InputText} // so it become empty again
+                 />
+                 <p>hello {InputText}</p>
+                 <button onClick = {Reset}>reset</button>
+                 <button onClick = {Example}>example</button>
+             </>    
+        )
+        
+      }  
+
+
+const container = document.querySelector('.js-container');
+ReactDOM.createRoot(container).render(<App />);
+</script>   
+   
+  </body>
+</html>
