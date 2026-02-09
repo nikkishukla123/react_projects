@@ -18,28 +18,40 @@
         function saveInputText (event) {
             setInputText(event.target.value) // get the in value of placeholder
         }
-        function sendmessage () {
+        function handlekeyDown (event) { // if enter key is pressen then call the sendmsg function
+             if (event.key === 'Enter'){
+              sendmessage ()
+             } else if (event.key === 'Escape'){ //clear msg in keyboard
+              setInputText("")
+             }
+        }
+       async function sendmessage () {
           const  newChatMessages = ([  // set new value
              ...chatMessages, // spreader creating duplicate and the updating
              {
                 message:inputText, // show value that we written in textbox
                 sender:'user',
                 id: crypto.randomUUID()
-             }
+             },
+             {
+              message: 'Loading...',
+              sender: 'robot',
+              id: crypto.randomUUID()
+           }
            ])
            setChatMessages(newChatMessages);   // yha par pass kardena hai
-
-           const response = Chatbot.getResponse(inputText);
+           setInputText('') ; // to set the placeholder empty
+          
+           
+           const response = await Chatbot.getResponseAsync(inputText);
            setChatMessages ([  // set new value
-             ...newChatMessages, // spreader creating duplicate copies of now new chatmessages so user and robot both msg show on website without overwrite
-             {
-                message:response, // show value that we written in textbox
+             ...newChatMessages.slice(0, -1), // last "Loading..." remove
+             { message:response, // chatbot defined response
                 sender:'robot',
                 id: crypto.randomUUID()
              }
            ])
            
-           setInputText('') ; // to set the placeholder empty
         }
         return(
             <>
@@ -47,7 +59,8 @@
                  placeholder = "send a message to chat bot" 
                  size = "30"
                  onChange = {saveInputText}
-                 value = {inputText}/>  
+                 value = {inputText}
+                 onKeyDown = {handlekeyDown}/>  
              <button onClick = {sendmessage}>send</button>
             </>
         )
