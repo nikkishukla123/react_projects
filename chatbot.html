@@ -5,6 +5,7 @@
     <style>
       .body {
         font-family: 'Arial';
+        margin: 0px; /* Removes the default 8px margin from the body */
       }
       .send-button {
         background-color: rgb(25, 135, 84);
@@ -25,11 +26,21 @@
       }
       .chat-input-container {
         display: flex;
+        margin-bottom: 20px;
       }
       .app-container{
         max-width: 600px;
         margin-left: auto;
         margin-right: auto;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .chat-message-container {
+        flex-grow: 1;
+        margin-top: 20px;
+        overflow: scroll;  /* adding scroll feature*/
+        scrollbar-width: none;
       }
       .chat-message-text{
         background-color: rgb(238, 238, 238);
@@ -47,6 +58,9 @@
       .chat-message-robot {
         display: flex; /* due to this div doesnot take entire line*/
         align-items: start; 
+      }
+      .chat-msg-profile {
+        width: 45px;
       }
     </style>
   </head>
@@ -139,11 +153,11 @@
               ? 'chat-message-user'
               : 'chat-message-robot'
             }>
-            {sender === 'robot' && <img src="robot.png" width ="30"/>} 
+            {sender === 'robot' && <img src="robot.png" width ="50" className ="chat-msg-profile"/>} 
             <div className ='chat-message-text'>
               {message}
             </div>
-            {sender === 'user' && <img src="user.png" width ="30"/>} 
+            {sender === 'user' && <img src="user.png" width ="50" className ="chat-msg-profile"/>} 
             </div>
         )
        }
@@ -151,8 +165,16 @@
        
 
        function ChatMessages ({chatMessages}) { // so passing the array
+        const chatMessagesRef = React.useRef(null); // container ka refernce le liya
+         // Hook add scroll feature
+        React.useEffect(()=> { // useefeect run code after updation
+          const containerElem =chatMessagesRef.current
+          if(containerElem) {
+            containerElem.scrollTop = containerElem.scrollHeight;
+          }
+        },[chatMessages]);
          return(
-            <>
+            <div className="chat-message-container" ref ={chatMessagesRef}>
                 {chatMessages.map((chatMessage) => { // here chatMessages array acess is needed
                     return(
                         <ChatMessage
@@ -162,7 +184,7 @@
                     );
                 })
             
-        }  </>
+        }  </div>
     ) }
 
        function App () {
@@ -191,13 +213,13 @@
         // const setChatMessages = array[1]; // updater value
             return(
             <div className ="app-container">
+            <ChatMessages
+            chatMessages ={chatMessages}/>
             <ChatInput
             chatMessages ={chatMessages}
             setChatMessages = {setChatMessages}
             isLoading = {isLoading}
             setIsLoading = {setIsLoading}/> 
-            <ChatMessages
-            chatMessages ={chatMessages}/>
             </div>)
        }
 
