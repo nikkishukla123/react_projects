@@ -4,11 +4,18 @@ import './HomePage.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
  export function HomePage () {
+    const [quantity, setQuantity] = useState(1);
     const [products, setProducts] = useState([]);
+    const [cart, setCart] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:3000/products')
+        axios.get('/api/products')
         .then((response) => {
             setProducts(response.data);
+        });
+
+        axios.get('/api/cart-items')
+        .then((response) => {
+            setCart(response.data);
         });
        
      },[]);
@@ -16,7 +23,7 @@ import { useEffect } from 'react';
         <>
         <title>Homepage</title>
         <link rel="icon" type="image/svg+xml" href="home-favicon.png" />
-        <Header/>
+        <Header cart={cart}/>
         <div className="home-page">
             <div className="products-grid">
              {products.map((product) => {
@@ -43,18 +50,21 @@ import { useEffect } from 'react';
                         </div>
 
                         <div className="product-quantity-container">
-                            <select>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                            </select>
+                        <select
+                            value={quantity}
+                            onChange={(e) => setQuantity(Number(e.target.value))}
+                            >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
                         </div>
 
                         <div className="product-spacer"></div>
