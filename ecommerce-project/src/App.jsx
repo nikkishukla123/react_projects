@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router';
-import { HomePage } from './Pages/HomePage';
+import { HomePage } from './Pages/home/HomePage';
 import { CheckoutPage } from './Pages/Checkout/CheckoutPage';
-import { OrdersPage } from './Pages/OrdersPage';
+import { OrdersPage } from './Pages/orders/OrdersPage';
 import { TrackingPage } from './Pages/TrackingPage';
 import { PageNotFound } from './Pages/PageNotFound';
 import axios from 'axios';

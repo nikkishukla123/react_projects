@@ -1,29 +1,10 @@
-import axios from 'axios';
-import { Header } from '../components/Header'
-import './HomePage.css';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { formatMoney } from '../utils/money';
- export function HomePage ({ cart }) {
-    const [quantity, setQuantity] = useState(1);
-    const [products, setProducts] = useState([]);
-   
-    useEffect(() => {
-        axios.get('/api/products')
-        .then((response) => {
-            setProducts(response.data);
-        });
-
-     
-       
-     },[]);
-    return(
-        <>
-        <title>Homepage</title>
-        <link rel="icon" type="image/svg+xml" href="home-favicon.png" />
-        <Header cart={cart}/>
-        <div className="home-page">
-            <div className="products-grid">
+import { formatMoney } from "../../utils/money";
+import { useState } from "react";
+export function ProductsGrid({products}) {
+    const [quantities, setQuantities] = useState({});
+  return (
+    <>
+       <div className="products-grid">
              {products.map((product) => {
                 return (
                     <div className="product-container" key={product.id}>
@@ -49,8 +30,8 @@ import { formatMoney } from '../utils/money';
 
                         <div className="product-quantity-container">
                         <select
-                            value={quantity}
-                            onChange={(e) => setQuantity(Number(e.target.value))}
+                            value={quantities}
+                            onChange={(e) => setQuantities(Number(e.target.value))}
                             >
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -84,7 +65,6 @@ import { formatMoney } from '../utils/money';
     
            
             </div>
-        </div>
-        </>
-    )
+    </>
+  );
 }
